@@ -18,6 +18,7 @@ public class BoardController{
 	// /boardList.do
 	@Autowired
 	private BoardMapper mapper;
+	
 	// HandlerMapping
 	@RequestMapping("/boardList.do")
 	public String boardList(Model model) {
