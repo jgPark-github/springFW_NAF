@@ -48,15 +48,22 @@
   		    $.each(data, function(idx, obj){
   	  		    listHtml += "<tr>";
   	  		    listHtml += "<td>"+obj.idx+"</td>";
-  	  		    listHtml += "<td>"+obj.title+"</td>";
+  	  		    listHtml += "<td><a href='#'>"+obj.title+"</td>";
   	  		    listHtml += "<td>"+obj.writer+"</td>";
   	  		    listHtml += "<td>"+obj.indate+"</td>";
   	  		    listHtml += "<td>"+obj.count+"</td>";
   	  		    listHtml += "</tr>";
+  	  		    /* 자식 row */
+  	  		    listHtml += "<tr>";
+  	  		     listHtml += "<td>내용</td>";
+  	  		     listHtml += "<td colspan='4'>";
+  	  		      listHtml += "<textarea rows='7' class='form-control'>"+obj.content+"</textarea>";
+  	  		     listHtml += "</td>";
+  	  		    listHtml += "</tr>";
   		    });
 	  		listHtml+="<tr>";
 	  		listHtml += "<td colspan='5'>";
-	  		listHtml +=   "<button class='btn btn-primary btn-sm' onclick='goForm()'>게시판쓰기</button>";
+	  		  listHtml += "<button class='btn btn-primary btn-sm' onclick='goForm()'>게시판쓰기</button>";
 	  		listHtml += "</td>";
 	  		listHtml +="</tr>";
   		  
@@ -95,10 +102,13 @@
   		    }  			
   		});
   		
-  		// form초기화
-		  $("#title").val("");   //게시판 제목
-		  $("#content").val(""); //게시판 내용
-		  $("#writer").val("");  //게시판 작성자
+  		// 등록후 form의 입력요소들 개별 초기화
+		 /* $("#title").val("");   //게시판 제목
+		    $("#content").val(""); //게시판 내용
+		    $("#writer").val("");  //게시판 작성자
+		 */
+		 // 등록후 form의 입력요소들 한번에 초기화 
+		  $("#btnClear").trigger("click");
 
   	}
   </script>
@@ -134,7 +144,7 @@
 	         <tr>
 	           <td colspan="2" align="center">
 	               <button type="submit" class="btn btn-success btn-sm" onclick="goInsert()">등록</button>
-	               <button type="reset"  class="btn btn-warning btn-sm">취소</button>
+	               <button type="reset"  class="btn btn-warning btn-sm" id="btnClear">취소</button>
 	               <button type="button" class="btn btn-warning btn-sm" onclick="goList()">리스트</button>
 	           </td>
 	         </tr>
