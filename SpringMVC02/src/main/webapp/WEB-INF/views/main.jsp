@@ -48,13 +48,14 @@
   		    $.each(data, function(idx, obj){
   	  		    listHtml += "<tr>";
   	  		    listHtml += "<td>"+obj.idx+"</td>";
-  	  		    listHtml += "<td><a href='#'>"+obj.title+"</td>";
+  	  		    listHtml += "<td><a href='javascript:goContent("+obj.idx+")'>"+obj.title+"</td>";
   	  		    listHtml += "<td>"+obj.writer+"</td>";
   	  		    listHtml += "<td>"+obj.indate+"</td>";
   	  		    listHtml += "<td>"+obj.count+"</td>";
   	  		    listHtml += "</tr>";
-  	  		    /* 자식 row */
-  	  		    listHtml += "<tr>";
+  	  		    
+  	  		    /* 내용을 가지고 있는 자식 row */
+  	  		    listHtml += "<tr id='trNm"+obj.idx+"' style='display:none'>";
   	  		     listHtml += "<td>내용</td>";
   	  		     listHtml += "<td colspan='4'>";
   	  		      listHtml += "<textarea rows='7' class='form-control'>"+obj.content+"</textarea>";
@@ -109,8 +110,14 @@
 		 */
 		 // 등록후 form의 입력요소들 한번에 초기화 
 		  $("#btnClear").trigger("click");
-
   	}
+  	/*컬럼 클릭시 내용보이기*/
+  	function goContent(idx){
+  		console.log("레코드idx: " + idx);
+  		$("#trNm"+idx).css("display","table-row"); //해당레코드(tr) show
+  	}
+  	
+  	
   </script>
 </head>
 <body>
@@ -152,6 +159,9 @@
         </form>
     </div>    
     <div class="panel-footer">인프런_스프1탄_Jun</div>
+   	<div id="parent">
+  		<button id="child">클릭</button>
+	</div>
   </div>
 </div>
 
