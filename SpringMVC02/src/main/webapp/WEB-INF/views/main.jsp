@@ -113,8 +113,10 @@
     <div class="panel-body" id="view">Panel Content</div>
     <!--  게시판쓰기, 최초 form load시에는 게시판쓰기는 숨긴다 -->
     <div class="panel-body" id="wform" style="display:none">
-    	<!-- 하나의 화면에서 처리를 위해 action은 없앤다
+    
+    	<!-- 하나의 화면에서 처리를 위해 action은 없앤다!!
     	     <form action="boardInsert.do" method="post"> -->
+    	     
     	<form id="frm">
 	      <table class="table">
 	         <tr>
