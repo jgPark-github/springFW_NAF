@@ -58,7 +58,10 @@
   	  		    listHtml += "<tr id='trNm"+obj.idx+"' style='display:none'>";
   	  		     listHtml += "<td>내용</td>";
   	  		     listHtml += "<td colspan='4'>";
-  	  		      listHtml += "<textarea rows='7' class='form-control'>"+obj.content+"</textarea>";
+  	  		      listHtml += "<textarea readonly rows='7' class='form-control'>"+obj.content+"</textarea>";
+  	  		     listHtml += "<br/>";
+  	  		     listHtml += "<button class='btn btn-success btn-sm'>수정화면</button>&nbsp;";
+  	  		     listHtml += "<button class='btn btn-warning btn-sm' onclick='goDelete("+obj.idx+")'>삭제하기</button>&nbsp;";
   	  		     listHtml += "</td>";
   	  		    listHtml += "</tr>";
   		    });
@@ -86,7 +89,7 @@
   		$("#view").css("display","block"); //게시판목록 보이기
   		$("#wform").css("display","none"); //게시판쓰기 숨기기
   	}
-  	
+  	  	
   	/* 게시판 글쓰기함수 */  	
   	function goInsert(){	  
   		/*form 안에 있는 모든 요소를 직렬화시켜서(=serialize) 한번에 가져오기*/
@@ -113,10 +116,31 @@
   	}
   	/*컬럼 클릭시 내용보이기*/
   	function goContent(idx){
-  		console.log("레코드idx: " + idx);
-  		$("#trNm"+idx).css("display","table-row"); //해당레코드(tr) show
+  		if($("#trNm"+idx).css("display")=="none"){
+  			console.log("레코드idx_보이기: " + idx);
+  			$("#trNm"+idx).css("display","table-row"); //해당레코드(tr) show
+  		} else {
+  	  		console.log("레코드idx_숨기기: " + idx);
+  	  	    $("#trNm"+idx).css("display","none"); //해당레코드(tr) show
+  		}
   	}
   	
+  	/*삭제하기*/
+ 	function goDelete(idx){
+  		alert("삭제하기: " + idx);
+  		
+  		$.ajax({
+  		    url: "boardDelete.do",     //URI: "/api/data"
+  		    type: "get",             //호출방식: GET, POST, PUT, DELETE 등
+  		    data: {"idx" : idx},  //서버로 보낼 데이터 직접세팅
+  		   // dataType: "json", >> 필요없다. 
+  		    success: loadList, //콜백함수로 게시판리스트 조회 호출
+  		    error: function(xhr, status, error) {
+  		        alert("요청실패~~~: "+xhr);
+  		    }  			
+  		});  		
+  	}
+
   	
   </script>
 </head>
@@ -159,9 +183,6 @@
         </form>
     </div>    
     <div class="panel-footer">인프런_스프1탄_Jun</div>
-   	<div id="parent">
-  		<button id="child">클릭</button>
-	</div>
   </div>
 </div>
 
