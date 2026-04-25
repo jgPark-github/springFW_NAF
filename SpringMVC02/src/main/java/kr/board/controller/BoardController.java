@@ -37,4 +37,9 @@ public class BoardController{
 	public @ResponseBody void boardDelete(@RequestParam("idx") int idx){
 		boardMapper.boardDelete(idx);  
 	}
+	//게시판수정(파라미터를 get방식으로 호출)
+	@RequestMapping("/boardUpdate.do")
+	public @ResponseBody void boardUpdate(@RequestParam("idx") int idx){
+		boardMapper.boardUpdate(idx);  
+	}
 }

@@ -14,6 +14,7 @@
   <script type="text/javascript">
   	$(document).ready(function(){
   		loadList();
+  		goList();
   	});
   	function loadList(){
   		//서버와 통신 : 게시판 리스트 가져오기
@@ -45,10 +46,10 @@
   		    listHtml += "</tr>";
   		    
   		    //테이블의 body(데이터)
-  		    $.each(data, function(idx, obj){
+  		    $.each(data, function(i, obj){
   	  		    listHtml += "<tr>";
   	  		    listHtml += "<td>"+obj.idx+"</td>";
-  	  		    listHtml += "<td><a href='javascript:goContent("+obj.idx+")'>"+obj.title+"</td>";
+  	  		    listHtml += "<td id='t"+obj.idx+"'><a href='javascript:goContent("+obj.idx+")'>"+obj.title+"</td>";
   	  		    listHtml += "<td>"+obj.writer+"</td>";
   	  		    listHtml += "<td>"+obj.indate+"</td>";
   	  		    listHtml += "<td>"+obj.count+"</td>";
@@ -58,9 +59,10 @@
   	  		    listHtml += "<tr id='trNm"+obj.idx+"' style='display:none'>";
   	  		     listHtml += "<td>내용</td>";
   	  		     listHtml += "<td colspan='4'>";
-  	  		      listHtml += "<textarea readonly rows='7' class='form-control'>"+obj.content+"</textarea>";
+  	  		      listHtml += "<textarea id='ta"+obj.idx+"'readonly rows='7' class='form-control'>"+obj.content+"</textarea>";
+  	  		      /*listHtml += `<textarea id="ta${obj.idx}" readonly rows="7" class="form-control">${obj.content}</textarea>`;*/
   	  		     listHtml += "<br/>";
-  	  		     listHtml += "<button class='btn btn-success btn-sm'>수정화면</button>&nbsp;";
+  	  		     listHtml += "<span id='ub" +obj.idx+ "'><button class='btn btn-success btn-sm' onclick='goUpdateForm("+obj.idx+")'>수정화면</button></span>&nbsp;";
   	  		     listHtml += "<button class='btn btn-warning btn-sm' onclick='goDelete("+obj.idx+")'>삭제하기</button>&nbsp;";
   	  		     listHtml += "</td>";
   	  		    listHtml += "</tr>";
@@ -76,8 +78,6 @@
   		  $("#view").html(listHtml);
   	}
   	
-  	goList();
-  	
   	/* 게시판목록 숨김, 게시판글쓰기 block 처리 */
   	function goForm(){
   		$("#view").css("display","none");   //게시판목록 숨기기
@@ -87,7 +87,7 @@
   	/* 게시판목록 block, 게시판글쓰기 숨김 처리 */  	
   	function goList(){
   		$("#view").css("display","block"); //게시판목록 보이기
-  		$("#wform").css("display","none"); //게시판쓰기 숨기기
+  		$("#wform").css("display","none"); //게시판쓰기 숨기기  		
   	}
   	  	
   	/* 게시판 글쓰기함수 */  	
@@ -119,10 +119,29 @@
   		if($("#trNm"+idx).css("display")=="none"){
   			console.log("레코드idx_보이기: " + idx);
   			$("#trNm"+idx).css("display","table-row"); //해당레코드(tr) show
+  			$("#ta"+idx).attr("readonly",true); //읽을때(=열릴때)는 항상 읽기전용모드
   		} else {
   	  		console.log("레코드idx_숨기기: " + idx);
   	  	    $("#trNm"+idx).css("display","none"); //해당레코드(tr) show
   		}
+  	}
+  	
+  	/*수정버튼 클릭*/
+ 	function goUpdateForm(idx){
+  		console.log("수정하기: " + idx);
+  		//1.쓰기가능
+  		$("#ta"+idx).attr("readonly",false); //textArea 읽기전용 속성 해제 
+  		$("#ta"+idx).focus();                // 커서 바로 이동 (선택사항)
+  		
+  		//2-1.수정시 제목도 수정되도록 변경한다.
+  		//2-2.수정전의 제목을 저장한다
+  		var nefTitle = $("#t"+idx).text();
+  		var newInput ="<input type='text' class='form-control' value='"+nefTitle+"'/>";
+  		$("#t"+idx).html(newInput);                // title
+  		
+  		//3.수정화면 -> 수정 버튼으로 캡션변경
+  		var newButton ="<button class='btn btn-info btn-sm'>수정</button>";
+  		$("#ub"+idx).html(newButton);
   	}
   	
   	/*삭제하기*/
