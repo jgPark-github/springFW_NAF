@@ -16,7 +16,7 @@ public interface BoardMapper {
      
      public void boardDelete(int idx);
      
-     public void boardUpdate(int idx);
+     public void boardUpdate(Board vo);
      
      @Update("update myboard set count=count+1 where idx=#{idx}")
      public void boardCount(int idx);

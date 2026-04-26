@@ -128,20 +128,39 @@
   	
   	/*수정버튼 클릭*/
  	function goUpdateForm(idx){
-  		console.log("수정하기: " + idx);
+  		console.log("수정form: " + idx);
   		//1.쓰기가능
   		$("#ta"+idx).attr("readonly",false); //textArea 읽기전용 속성 해제 
   		$("#ta"+idx).focus();                // 커서 바로 이동 (선택사항)
   		
   		//2-1.수정시 제목도 수정되도록 변경한다.
   		//2-2.수정전의 제목을 저장한다
-  		var nefTitle = $("#t"+idx).text();
-  		var newInput ="<input type='text' class='form-control' value='"+nefTitle+"'/>";
-  		$("#t"+idx).html(newInput);                // title
+  		var befTitle = $("#t"+idx).text();  //변경전 제목
+  		var newInput ="<input type='text' id='nt"+idx+"' class='form-control' value='"+befTitle+"'/>";
+  		$("#t"+idx).html(newInput);    //'수정'
   		
-  		//3.수정화면 -> 수정 버튼으로 캡션변경
-  		var newButton ="<button class='btn btn-info btn-sm'>수정</button>";
+  		//3.버튼캡션 변경 -> '수정화면' -> '수정' 
+  		var newButton ="<button class='btn btn-info btn-sm' onclick='goUpdate("+idx+")'>수정</button>";
   		$("#ub"+idx).html(newButton);
+  	}
+  	
+  	//수정하기
+  	function goUpdate(idx){
+  		alert("수정하기: " + idx);       //수정한 레코드 인덱스
+  		var title = $("#nt"+idx).val();  //수정한 제목
+  		var content = $("#ta"+idx).val();//수정한 내용
+  		
+  		$.ajax({
+  		    url: "boardUpdate.do",     //URI: "/api/data"
+  		    type: "post",             //호출방식: GET, POST, PUT, DELETE 등
+  		    data: {"idx":idx ,"title":title ,"content":content},  //서버로 보낼 데이터 직접세팅
+  		   // dataType: "json", >> 필요없다. 
+  		    success: loadList, //콜백함수로 게시판리스트 조회 호출
+  		    error: function(xhr, status, error) {
+  		        alert("요청실패(수정)~~~: "+xhr);
+  		    }  			
+  		}); 
+  		
   	}
   	
   	/*삭제하기*/
@@ -155,11 +174,10 @@
   		   // dataType: "json", >> 필요없다. 
   		    success: loadList, //콜백함수로 게시판리스트 조회 호출
   		    error: function(xhr, status, error) {
-  		        alert("요청실패~~~: "+xhr);
+  		        alert("요청실패(삭제)~~~: "+xhr);
   		    }  			
   		});  		
   	}
-
   	
   </script>
 </head>
