@@ -42,4 +42,17 @@ public class BoardController{
 	public @ResponseBody void boardUpdate(Board vo){
 		boardMapper.boardUpdate(vo);  
 	}
+	//게시판 상세조회(파라미터를 get방식으로 호출 및 json으로 변환하여 반환한다.)
+	@RequestMapping("/boardContent.do") 
+	public @ResponseBody Board boardContent(@RequestParam("idx") int idx){
+		Board vo = boardMapper.boardContent(idx);  // vo -> JSON
+		return vo;
+	}
+	//게시판 상세조회(파라미터를 get방식으로 호출 및 json으로 변환하여 반환한다.)
+	@RequestMapping("/boardCount.do") 
+	public @ResponseBody Board boardCount(@RequestParam("idx") int idx){
+		boardMapper.boardCount(idx); //조회 count +1 증가, update
+		Board vo = boardMapper.boardContent(idx);  // vo -> JSON, 조회수 멤버변수(count)
+		return vo;
+	}
 }

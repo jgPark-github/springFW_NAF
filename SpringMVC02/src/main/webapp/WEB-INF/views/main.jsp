@@ -52,14 +52,14 @@
   	  		    listHtml += "<td id='t"+obj.idx+"'><a href='javascript:goContent("+obj.idx+")'>"+obj.title+"</td>";
   	  		    listHtml += "<td>"+obj.writer+"</td>";
   	  		    listHtml += "<td>"+obj.indate+"</td>";
-  	  		    listHtml += "<td>"+obj.count+"</td>";
+  	  		    listHtml += "<td id='cnt"+obj.idx+"'>"+obj.count+"</td>";
   	  		    listHtml += "</tr>";
   	  		    
   	  		    /* 내용을 가지고 있는 자식 row */
   	  		    listHtml += "<tr id='trNm"+obj.idx+"' style='display:none'>";
   	  		     listHtml += "<td>내용</td>";
   	  		     listHtml += "<td colspan='4'>";
-  	  		      listHtml += "<textarea id='ta"+obj.idx+"'readonly rows='7' class='form-control'>"+obj.content+"</textarea>";
+  	  		      listHtml += "<textarea id='ta"+obj.idx+"'readonly rows='7' class='form-control'></textarea>";
   	  		      /*listHtml += `<textarea id="ta${obj.idx}" readonly rows="7" class="form-control">${obj.content}</textarea>`;*/
   	  		     listHtml += "<br/>";
   	  		     listHtml += "<span id='ub" +obj.idx+ "'><button class='btn btn-success btn-sm' onclick='goUpdateForm("+obj.idx+")'>수정화면</button></span>&nbsp;";
@@ -116,13 +116,43 @@
   	}
   	/*컬럼 클릭시 내용보이기*/
   	function goContent(idx){
-  		if($("#trNm"+idx).css("display")=="none"){
+  	    // 최초 화면에서는 상세보기 안보이기
+  		if($("#trNm"+idx).css("display")=="none"){  
   			console.log("레코드idx_보이기: " + idx);
+  			
+  	    //34장 클릭했을 경우에, 상세보기 내용을 가지고 온다.
+  		$.ajax({
+  		    url: "boardContent.do",     //URI: "/api/data"
+  		    type: "get",             //호출방식: GET, POST, PUT, DELETE 등
+  		    data: {"idx":idx},  //서버로 보낼 데이터 직접세팅
+  		   // dataType: "json", >> 필요없다. 
+  		    success: function(data){
+  		    	$("#ta"+idx).val(data.content)
+  		    }, //콜백함수로 게시판리스트 조회 호출
+  		    error: function(xhr, status, error) {
+  		        alert("요청실패(상세조회)~~~: "+xhr);
+  		    }  			
+  		});
+  			
   			$("#trNm"+idx).css("display","table-row"); //해당레코드(tr) show
   			$("#ta"+idx).attr("readonly",true); //읽을때(=열릴때)는 항상 읽기전용모드
+  			
   		} else {
-  	  		console.log("레코드idx_숨기기: " + idx);
-  	  	    $("#trNm"+idx).css("display","none"); //해당레코드(tr) show
+  		//상세보기 닫을 때 조회 카운트 증가
+  	  	  console.log("레코드idx_숨기기: " + idx);
+  	  	  $("#trNm"+idx).css("display","none"); //해당레코드(tr) hide
+    	  $.ajax({
+      		    url: "boardCount.do",     //URI: "/api/data"
+      		    type: "get",             //호출방식: GET, POST, PUT, DELETE 등
+      		    data: {"idx":idx},  //서버로 보낼 데이터 직접세팅
+      		   // 조회수 취득
+      		    success: function(data){
+      		    	$("#cnt"+data.idx).text(data.count);
+      		    }, 
+      		    error: function(xhr, status, error) {
+      		        alert("요청실패(카운트수정)~~~: "+xhr);
+      		    }  			
+      	  }); 
   		}
   	}
   	
