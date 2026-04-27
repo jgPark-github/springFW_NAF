@@ -51,7 +51,7 @@
   	  		    listHtml += "<td>"+obj.idx+"</td>";
   	  		    listHtml += "<td id='t"+obj.idx+"'><a href='javascript:goContent("+obj.idx+")'>"+obj.title+"</td>";
   	  		    listHtml += "<td>"+obj.writer+"</td>";
-  	  		    listHtml += "<td>"+obj.indate+"</td>";
+  	  		    listHtml += "<td>"+obj.indate.split(' ')[0]+"</td>";
   	  		    listHtml += "<td id='cnt"+obj.idx+"'>"+obj.count+"</td>";
   	  		    listHtml += "</tr>";
   	  		    
