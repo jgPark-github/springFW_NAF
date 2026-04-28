@@ -16,16 +16,14 @@
   		loadList();
   		goList();
   	});
+  	
   	function loadList(){
-  		//서버와 통신 : 게시판 리스트 가져오기
+  		//서버와 통신 : 게시판 전체 리스트 가져오기
   		$.ajax({
-  		    url: "boardList.do",     //URI: "/api/data"
+  		    url: "board/all",   
   		    type: "get",             //호출방식: GET, POST, PUT, DELETE 등
   		    data: { key: "value" },  //서버로 보낼 데이터
   		    dataType: "json",        //받는 타입: json, xml, html, text 등
-  		    //success: function(response) {
-  		    //    alert("response_data: "+ response.length+"\nTitle: "+response[0].title);
-  		    //},
   		    success: makeView, //콜백함수
   		    error: function(xhr, status, error) {
   		        alert("요청실패~~~: "+xhr);
@@ -96,7 +94,7 @@
   		var fData = $("#frm").serialize();
   		
   		$.ajax({
-  		    url: "boardInsert.do",     //URI: "/api/data"
+  		    url: "board/new",
   		    type: "post",             //호출방식: GET, POST, PUT, DELETE 등
   		    data: fData,  //서버로 보낼 데이터
   		   // dataType: "json", >> 필요없다. 
@@ -114,7 +112,7 @@
 		 // 등록후 form의 입력요소들 한번에 초기화 
 		  $("#btnClear").trigger("click");
   	}
-  	/*컬럼 클릭시 내용보이기*/
+  	/*컬럼 클릭시 상세내용 보이기*/
   	function goContent(idx){
   	    // 최초 화면에서는 상세보기 안보이기
   		if($("#trNm"+idx).css("display")=="none"){  
@@ -122,10 +120,8 @@
   			
   	    //34장 클릭했을 경우에, 상세보기 내용을 가지고 온다.
   		$.ajax({
-  		    url: "boardContent.do",     //URI: "/api/data"
+  		    url: "board/"+idx,    
   		    type: "get",             //호출방식: GET, POST, PUT, DELETE 등
-  		    data: {"idx":idx},  //서버로 보낼 데이터 직접세팅
-  		   // dataType: "json", >> 필요없다. 
   		    success: function(data){
   		    	$("#ta"+idx).val(data.content)
   		    }, //콜백함수로 게시판리스트 조회 호출
@@ -142,9 +138,8 @@
   	  	  console.log("레코드idx_숨기기: " + idx);
   	  	  $("#trNm"+idx).css("display","none"); //해당레코드(tr) hide
     	  $.ajax({
-      		    url: "boardCount.do",     //URI: "/api/data"
-      		    type: "get",             //호출방식: GET, POST, PUT, DELETE 등
-      		    data: {"idx":idx},  //서버로 보낼 데이터 직접세팅
+      		    url: "board/count/"+idx, 
+      		    type: "put",        //호출방식: GET, POST, PUT, DELETE 등
       		   // 조회수 취득
       		    success: function(data){
       		    	$("#cnt"+data.idx).text(data.count);
@@ -174,17 +169,24 @@
   		$("#ub"+idx).html(newButton);
   	}
   	
-  	//수정하기
+  	//내용 수정하기
   	function goUpdate(idx){
   		alert("수정하기: " + idx);       //수정한 레코드 인덱스
   		var title = $("#nt"+idx).val();  //수정한 제목
   		var content = $("#ta"+idx).val();//수정한 내용
   		
   		$.ajax({
-  		    url: "boardUpdate.do",     //URI: "/api/data"
-  		    type: "post",             //호출방식: GET, POST, PUT, DELETE 등
-  		    data: {"idx":idx ,"title":title ,"content":content},  //서버로 보낼 데이터 직접세팅
-  		   // dataType: "json", >> 필요없다. 
+  		    url: "board/update",    
+  		    type: "put",             //호출방식: GET, POST, PUT, DELETE 등
+  		    /********************************************************************************************
+  		     * contentType 속성을 추가하여 전송 데이터가 JSON임을 명시하고, JSON.stringify() 함수를 사용해 
+  		       자바스크립트 객체를 JSON 포맷의 문자열로 직렬화하여 전송한다  ****************************/
+  		    contentType: "application/json; charset=utf-8", // 핵심 수정 부분 1: 서버에 JSON 형식으로 전송한다.
+        	data: JSON.stringify({ // 핵심 수정 부분 2: 데이터를 JSON 문자열로 직렬화
+            	"idx": idx, 
+            	"title": title, 
+            	"content": content
+        	}),
   		    success: loadList, //콜백함수로 게시판리스트 조회 호출
   		    error: function(xhr, status, error) {
   		        alert("요청실패(수정)~~~: "+xhr);
@@ -198,9 +200,8 @@
   		alert("삭제하기: " + idx);
   		
   		$.ajax({
-  		    url: "boardDelete.do",     //URI: "/api/data"
-  		    type: "get",             //호출방식: GET, POST, PUT, DELETE 등
-  		    data: {"idx" : idx},  //서버로 보낼 데이터 직접세팅
+  		    url: "board/"+idx,  
+  		    type: "delete",     //호출방식: GET, POST, PUT, DELETE 등
   		   // dataType: "json", >> 필요없다. 
   		    success: loadList, //콜백함수로 게시판리스트 조회 호출
   		    error: function(xhr, status, error) {
